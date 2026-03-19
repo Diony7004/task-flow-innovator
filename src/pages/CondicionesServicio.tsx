@@ -8,7 +8,7 @@ const CondicionesServicio = () => (
 
       <div className="mt-10 space-y-8 text-foreground/90 text-sm leading-relaxed [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mt-8 [&_h2]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_strong]:text-foreground">
         <h2>1. Identificación del prestador</h2>
-        <p>Dionisio Sánchez, persona física con actividad empresarial bajo el Régimen Simplificado de Confianza, operando bajo la marca comercial <strong>Multi-Agent-AI</strong>, con domicilio en México.</p>
+        <p><strong>Multi-Agent-AI</strong>, con domicilio en México.</p>
         <p>Correo de contacto: <strong>contacto@multi-agent-ai.com</strong></p>
 
         <h2>2. Objeto</h2>
