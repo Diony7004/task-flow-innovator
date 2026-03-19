@@ -8,7 +8,7 @@ const EliminacionDatos = () => (
 
       <div className="mt-10 space-y-8 text-foreground/90 text-sm leading-relaxed [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mt-8 [&_h2]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_strong]:text-foreground">
         <h2>1. Introducción</h2>
-        <p>En Multi-Agent-AI, operado por Dionisio Sánchez (persona física con actividad empresarial bajo el Régimen Simplificado de Confianza), respetamos su derecho a solicitar la eliminación de sus datos personales de conformidad con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y las políticas de Meta Platforms, Inc.</p>
+        <p>En Multi-Agent-AI, con domicilio en México, respetamos su derecho a solicitar la eliminación de sus datos personales de conformidad con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y las políticas de Meta Platforms, Inc.</p>
 
         <h2>2. Alcance</h2>
         <p>Esta política aplica a todos los datos personales recopilados a través de:</p>

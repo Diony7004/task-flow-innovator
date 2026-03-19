@@ -8,7 +8,7 @@ const PoliticaPrivacidad = () => (
 
       <div className="mt-10 space-y-8 text-foreground/90 text-sm leading-relaxed [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mt-8 [&_h2]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_strong]:text-foreground">
         <h2>1. Responsable del tratamiento</h2>
-        <p>Dionisio Sánchez, persona física con actividad empresarial bajo el Régimen Simplificado de Confianza, con domicilio en México (en adelante, "Multi-Agent-AI"), es responsable del tratamiento de los datos personales que usted proporcione a través del sitio web multi-agent-ai.com y los servicios asociados.</p>
+        <p>Multi-Agent-AI, con domicilio en México, es responsable del tratamiento de los datos personales que usted proporcione a través del sitio web multi-agent-ai.com y los servicios asociados.</p>
         <p>Correo de contacto: <strong>contacto@multi-agent-ai.com</strong></p>
 
         <h2>2. Datos personales que recopilamos</h2>
