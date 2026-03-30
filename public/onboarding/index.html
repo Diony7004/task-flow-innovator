@@ -184,8 +184,8 @@
 
           <!-- Teléfono -->
           <div>
-            <label for="telefono" class="block text-sm font-medium mb-1.5">Teléfono de contacto</label>
-            <input type="tel" id="telefono" class="input-field w-full px-4 py-2.5 rounded-lg" placeholder="+524421234567">
+            <label for="telefono" class="block text-sm font-medium mb-1.5">Teléfono de contacto <span class="text-muted font-normal">(con código de país)</span></label>
+            <input type="tel" id="telefono" class="input-field w-full px-4 py-2.5 rounded-lg" placeholder="Ej: +52 442 123 4567">
             <p id="err-telefono" class="error-text hidden"></p>
           </div>
 
@@ -411,7 +411,10 @@
       if (id === 'nombre_negocio' && val.length < 3) error = 'Mínimo 3 caracteres';
       if (id === 'nombre_contacto' && val.length < 3) error = 'Mínimo 3 caracteres';
       if (id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) error = 'Email no válido';
-      if (id === 'telefono' && !/^\+52\d{10}$/.test(val)) error = 'Formato: +52 seguido de 10 dígitos';
+      if (id === 'telefono' && !/^\+\d{1,3}[\s-]?\d{6,14}$/.test(val.replace(/[\s-]/g, '').replace(/^(\+\d{1,3})/, '$1 '))) {
+        // Validate: starts with +, country code (1-3 digits), then 6-14 digits
+        if (!/^\+\d{7,15}$/.test(val.replace(/[\s-]/g, ''))) error = 'Incluye código de país. Ej: +52 442 123 4567, +1 555 123 4567';
+      }
       if (id === 'giro' && !val) error = 'Selecciona un giro';
       if (id === 'volumen' && !val) error = 'Selecciona una opción';
 
@@ -460,7 +463,7 @@
       return nn.length >= 3 &&
         nc.length >= 3 &&
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em) &&
-        /^\+52\d{10}$/.test(tel) &&
+        /^\+\d{7,15}$/.test(tel.replace(/[\s-]/g, '')) &&
         giro !== '' &&
         vol !== '' &&
         acceptedTerms &&
