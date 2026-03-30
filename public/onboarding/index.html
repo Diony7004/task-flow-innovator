@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conecta tu WhatsApp con IA | Multi-Agent-AI</title>
+  <meta name="description" content="Automatiza las respuestas de tu negocio 24/7 con inteligencia artificial. Conecta tu WhatsApp Business en minutos.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b82f6',
+            accent: '#22c55e',
+            dark: '#0f172a',
+            card: '#1e293b',
+            muted: '#94a3b8',
+            border: '#334155',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #0f172a; color: #f1f5f9; }
+    .gradient-text { background: linear-gradient(135deg, #3b82f6, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-gradient { background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
+    .card-glow { box-shadow: 0 0 30px rgba(59, 130, 246, 0.1); }
+    .btn-primary { background: linear-gradient(135deg, #3b82f6, #2563eb); transition: all 0.3s; }
+    .btn-primary:hover:not(:disabled) { background: linear-gradient(135deg, #2563eb, #1d4ed8); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .input-field { background: #0f172a; border: 1px solid #334155; color: #f1f5f9; transition: border-color 0.2s; }
+    .input-field:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+    .input-field::placeholder { color: #64748b; }
+    .input-field:disabled { opacity: 0.6; }
+    .select-field { background: #0f172a; border: 1px solid #334155; color: #f1f5f9; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+    .select-field:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+    .error-text { color: #ef4444; font-size: 0.75rem; margin-top: 4px; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .faq-answer.open { max-height: 200px; }
+    .fade-in { animation: fadeIn 0.5s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin 1s linear infinite; }
+    .step-icon { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem; }
+    .benefit-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; transition: transform 0.2s, border-color 0.2s; }
+    .benefit-card:hover { transform: translateY(-2px); border-color: #3b82f6; }
+    .checkbox-custom { width: 20px; height: 20px; border: 2px solid #334155; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+    .checkbox-custom.checked { background: #3b82f6; border-color: #3b82f6; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero-gradient py-20 md:py-32 text-center px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="inline-block px-4 py-1.5 rounded-full border border-accent/30 bg-accent/10 text-accent text-sm font-medium mb-6">
+        Multi-Agent-AI
+      </div>
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+        Conecta tu WhatsApp con <span class="gradient-text">Inteligencia Artificial</span>
+      </h1>
+      <p class="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-8">
+        Automatiza las respuestas de tu negocio 24/7 sin perder el acceso a tu app de WhatsApp Business
+      </p>
+      <div class="flex items-center justify-center gap-4 text-sm text-muted mb-8">
+        <span class="flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          WhatsApp Business
+        </span>
+        <span class="flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+          IA Avanzada
+        </span>
+      </div>
+      <a href="#formulario" class="btn-primary inline-block px-8 py-3.5 rounded-lg text-white font-semibold text-lg">
+        Conectar mi WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== COMO FUNCIONA ===== -->
+  <section class="py-20 px-4 border-t border-border">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">¿Cómo funciona?</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="step-icon bg-primary/20 text-primary">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <p class="text-xs text-primary font-semibold mb-2">Paso 1</p>
+          <h3 class="text-lg font-bold mb-2">Registra tus datos</h3>
+          <p class="text-muted text-sm">Completa el formulario con la info de tu negocio</p>
+        </div>
+        <div class="text-center">
+          <div class="step-icon bg-accent/20 text-accent">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+          </div>
+          <p class="text-xs text-accent font-semibold mb-2">Paso 2</p>
+          <h3 class="text-lg font-bold mb-2">Conecta tu WhatsApp</h3>
+          <p class="text-muted text-sm">Autoriza la conexión segura con Meta</p>
+        </div>
+        <div class="text-center">
+          <div class="step-icon bg-purple-500/20 text-purple-400">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          </div>
+          <p class="text-xs text-purple-400 font-semibold mb-2">Paso 3</p>
+          <h3 class="text-lg font-bold mb-2">¡Listo! Tu bot IA está activo</h3>
+          <p class="text-muted text-sm">Recibe mensajes automatizados al instante</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BENEFICIOS ===== -->
+  <section class="py-20 px-4 border-t border-border">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Beneficios</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="benefit-card">
+          <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="font-bold mb-2">Tu app sigue funcionando</h3>
+          <p class="text-sm text-muted">Conservas el acceso a WhatsApp Business en tu celular</p>
+        </div>
+        <div class="benefit-card">
+          <div class="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="font-bold mb-2">Respuestas con IA 24/7</h3>
+          <p class="text-sm text-muted">Un asistente inteligente atiende cuando tú no puedes</p>
+        </div>
+        <div class="benefit-card">
+          <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="font-bold mb-2">Sin contratos largos</h3>
+          <p class="text-sm text-muted">Cancela cuando quieras, sin penalizaciones</p>
+        </div>
+        <div class="benefit-card">
+          <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-bold mb-2">Soporte dedicado</h3>
+          <p class="text-sm text-muted">Te asignamos un asesor técnico personal</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FORMULARIO ===== -->
+  <section class="py-20 px-4 border-t border-border" id="formulario">
+    <div class="max-w-xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Registra tu negocio</h2>
+      <p class="text-center text-muted mb-10">Completa el formulario para conectar tu WhatsApp Business</p>
+
+      <div id="form-container" class="rounded-2xl border border-border bg-card p-6 md:p-8 card-glow">
+        <div class="space-y-5">
+          <!-- Nombre del negocio -->
+          <div>
+            <label for="nombre_negocio" class="block text-sm font-medium mb-1.5">Nombre del negocio</label>
+            <input type="text" id="nombre_negocio" class="input-field w-full px-4 py-2.5 rounded-lg" placeholder="Ej. Tacos El Patrón">
+            <p id="err-nombre_negocio" class="error-text hidden"></p>
+          </div>
+
+          <!-- Nombre del contacto -->
+          <div>
+            <label for="nombre_contacto" class="block text-sm font-medium mb-1.5">Nombre del contacto</label>
+            <input type="text" id="nombre_contacto" class="input-field w-full px-4 py-2.5 rounded-lg" placeholder="Ej. Juan Pérez">
+            <p id="err-nombre_contacto" class="error-text hidden"></p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium mb-1.5">Email</label>
+            <input type="email" id="email" class="input-field w-full px-4 py-2.5 rounded-lg" placeholder="correo@empresa.com">
+            <p id="err-email" class="error-text hidden"></p>
+          </div>
+
+          <!-- Teléfono -->
+          <div>
+            <label for="telefono" class="block text-sm font-medium mb-1.5">Teléfono de contacto</label>
+            <input type="tel" id="telefono" class="input-field w-full px-4 py-2.5 rounded-lg" placeholder="+524421234567">
+            <p id="err-telefono" class="error-text hidden"></p>
+          </div>
+
+          <!-- Giro -->
+          <div>
+            <label for="giro" class="block text-sm font-medium mb-1.5">Giro del negocio</label>
+            <select id="giro" class="select-field w-full px-4 py-2.5 rounded-lg">
+              <option value="">Selecciona un giro</option>
+              <option>Restaurante/Cafetería</option>
+              <option>Tienda/Comercio</option>
+              <option>Servicios profesionales</option>
+              <option>Salud/Médico</option>
+              <option>Educación</option>
+              <option>Inmobiliaria</option>
+              <option>Belleza/Estética</option>
+              <option>Automotriz</option>
+              <option>Otro</option>
+            </select>
+            <p id="err-giro" class="error-text hidden"></p>
+          </div>
+
+          <!-- Volumen -->
+          <div>
+            <label for="volumen" class="block text-sm font-medium mb-1.5">¿Cuántos mensajes recibes al día?</label>
+            <select id="volumen" class="select-field w-full px-4 py-2.5 rounded-lg">
+              <option value="">Selecciona una opción</option>
+              <option>Menos de 20</option>
+              <option>20-50</option>
+              <option>50-100</option>
+              <option>Más de 100</option>
+            </select>
+            <p id="err-volumen" class="error-text hidden"></p>
+          </div>
+
+          <!-- Términos -->
+          <div class="flex items-start gap-3">
+            <div id="checkbox-terms" class="checkbox-custom mt-0.5" onclick="toggleTerms()">
+              <svg id="check-icon" class="w-3.5 h-3.5 text-white hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            </div>
+            <label class="text-sm text-muted cursor-pointer" onclick="toggleTerms()">
+              Acepto los
+              <a href="https://multi-agent-ai.com/condiciones-servicio/" target="_blank" class="text-primary hover:underline" onclick="event.stopPropagation()">Términos de Servicio</a>
+              y la
+              <a href="https://multi-agent-ai.com/politica-privacidad/" target="_blank" class="text-primary hover:underline" onclick="event.stopPropagation()">Política de Privacidad</a>
+            </label>
+          </div>
+
+          <!-- Turnstile CAPTCHA -->
+          <div class="flex justify-center">
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAACyJ5_bZt8B6dAgA" data-callback="onCaptchaSuccess" data-expired-callback="onCaptchaExpired"></div>
+          </div>
+
+          <!-- Meta popup message -->
+          <p id="meta-popup-msg" class="text-sm text-center text-primary animate-pulse hidden">
+            Completa la autorización en la ventana de Meta
+          </p>
+
+          <!-- Submit button -->
+          <button id="btn-submit" class="btn-primary w-full py-3.5 rounded-lg text-white font-semibold text-base flex items-center justify-center gap-2" disabled onclick="handleSubmit()">
+            <span id="btn-text">Conectar mi WhatsApp</span>
+            <svg id="btn-spinner" class="w-5 h-5 spinner hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Success section (hidden initially) -->
+      <div id="success-container" class="hidden fade-in">
+        <div class="rounded-2xl border border-accent/30 bg-card p-8 md:p-12 text-center card-glow">
+          <div class="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold mb-4">¡Conexión exitosa!</h3>
+          <div class="space-y-3 mb-8 text-left max-w-sm mx-auto">
+            <div class="flex justify-between py-2 border-b border-border">
+              <span class="text-muted text-sm">Negocio</span>
+              <span id="success-negocio" class="font-medium text-sm"></span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-border">
+              <span class="text-muted text-sm">WABA ID</span>
+              <span id="success-waba" class="font-medium text-sm"></span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-border">
+              <span class="text-muted text-sm">Phone Number ID</span>
+              <span id="success-phone" class="font-medium text-sm"></span>
+            </div>
+          </div>
+          <p class="text-muted mb-6">Nuestro equipo te contactará en las próximas 24 horas para activar tu asistente de IA</p>
+          <a href="https://multi-agent-ai.com" class="inline-block px-6 py-2.5 rounded-lg border border-border text-sm hover:bg-card transition">
+            Volver al inicio
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="py-20 px-4 border-t border-border">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Preguntas frecuentes</h2>
+      <div class="space-y-3">
+        <div class="border border-border rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-card/50 transition" onclick="toggleFaq(this)">
+            ¿Pierdo el acceso a mi WhatsApp Business?
+            <svg class="w-5 h-5 text-muted transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p class="px-6 pb-4 text-sm text-muted">No, tu app sigue funcionando normal. La conexión permite que AMBOS funcionen al mismo tiempo. Puedes seguir usando WhatsApp Business en tu celular como siempre.</p>
+          </div>
+        </div>
+        <div class="border border-border rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-card/50 transition" onclick="toggleFaq(this)">
+            ¿Qué datos comparten?
+            <svg class="w-5 h-5 text-muted transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p class="px-6 pb-4 text-sm text-muted">Solo los necesarios para enviar y recibir mensajes automatizados. No accedemos a tus conversaciones privadas ni almacenamos datos personales de tus clientes.</p>
+          </div>
+        </div>
+        <div class="border border-border rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-card/50 transition" onclick="toggleFaq(this)">
+            ¿Puedo desconectar en cualquier momento?
+            <svg class="w-5 h-5 text-muted transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p class="px-6 pb-4 text-sm text-muted">Sí, puedes revocar el acceso desde tu configuración de Meta en cualquier momento. No hay penalizaciones ni contratos de permanencia.</p>
+          </div>
+        </div>
+        <div class="border border-border rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-card/50 transition" onclick="toggleFaq(this)">
+            ¿Cuánto cuesta?
+            <svg class="w-5 h-5 text-muted transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p class="px-6 pb-4 text-sm text-muted">Contáctanos para conocer nuestros planes adaptados a tu volumen de mensajes. Tenemos opciones desde PyMEs hasta grandes empresas.</p>
+          </div>
+        </div>
+        <div class="border border-border rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-card/50 transition" onclick="toggleFaq(this)">
+            ¿Funciona con WhatsApp normal (no Business)?
+            <svg class="w-5 h-5 text-muted transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p class="px-6 pb-4 text-sm text-muted">No, solo funciona con WhatsApp Business. Si no tienes WhatsApp Business, te ayudamos a migrar. El proceso es sencillo y no pierdes tus conversaciones.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="py-8 px-4 border-t border-border">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-4 text-sm">
+        <a href="https://multi-agent-ai.com/politica-privacidad/" target="_blank" class="text-muted hover:text-white transition">Política de Privacidad</a>
+        <a href="https://multi-agent-ai.com/condiciones-servicio/" target="_blank" class="text-muted hover:text-white transition">Condiciones de Servicio</a>
+        <a href="https://multi-agent-ai.com/eliminacion-datos/" target="_blank" class="text-muted hover:text-white transition">Eliminación de Datos</a>
+      </div>
+      <p class="text-sm text-muted mb-1">
+        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        contacto@multi-agent-ai.com
+      </p>
+      <p class="text-xs text-muted/60 mt-2">&copy; 2026 Multi-Agent-AI. Proveedor autorizado de tecnología de Meta.</p>
+    </div>
+  </footer>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div id="toast" class="fixed bottom-6 right-6 max-w-sm bg-red-900/90 border border-red-500/30 text-white px-5 py-3 rounded-xl shadow-lg hidden z-50">
+    <p id="toast-title" class="font-semibold text-sm"></p>
+    <p id="toast-msg" class="text-sm text-red-200 mt-0.5"></p>
+  </div>
+
+  <script>
+    // ===== STATE =====
+    let acceptedTerms = false;
+    let captchaToken = null;
+    let isSubmitting = false;
+    let embeddedSignupData = { waba_id: null, phone_number_id: null };
+
+    // ===== FACEBOOK SDK INIT =====
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId: '716281344565330',
+        autoLogAppEvents: true,
+        xfbml: true,
+        version: 'v21.0'
+      });
+    };
+
+    // ===== CAPTCHA CALLBACKS =====
+    function onCaptchaSuccess(token) {
+      captchaToken = token;
+      updateButton();
+    }
+
+    function onCaptchaExpired() {
+      captchaToken = null;
+      updateButton();
+    }
+
+    // ===== TERMS CHECKBOX =====
+    function toggleTerms() {
+      acceptedTerms = !acceptedTerms;
+      const box = document.getElementById('checkbox-terms');
+      const icon = document.getElementById('check-icon');
+      if (acceptedTerms) {
+        box.classList.add('checked');
+        icon.classList.remove('hidden');
+      } else {
+        box.classList.remove('checked');
+        icon.classList.add('hidden');
+      }
+      updateButton();
+    }
+
+    // ===== VALIDATION =====
+    function validateField(id) {
+      const el = document.getElementById(id);
+      const errEl = document.getElementById('err-' + id);
+      if (!el || !errEl) return true;
+      const val = el.value.trim();
+      let error = '';
+
+      if (id === 'nombre_negocio' && val.length < 3) error = 'Mínimo 3 caracteres';
+      if (id === 'nombre_contacto' && val.length < 3) error = 'Mínimo 3 caracteres';
+      if (id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) error = 'Email no válido';
+      if (id === 'telefono' && !/^\+52\d{10}$/.test(val)) error = 'Formato: +52 seguido de 10 dígitos';
+      if (id === 'giro' && !val) error = 'Selecciona un giro';
+      if (id === 'volumen' && !val) error = 'Selecciona una opción';
+
+      if (error) {
+        errEl.textContent = error;
+        errEl.classList.remove('hidden');
+        el.style.borderColor = '#ef4444';
+      } else {
+        errEl.classList.add('hidden');
+        el.style.borderColor = '#334155';
+      }
+      updateButton();
+      return !error;
+    }
+
+    // Add blur listeners
+    ['email', 'telefono'].forEach(id => {
+      document.getElementById(id)?.addEventListener('blur', () => validateField(id));
+    });
+
+    // Add input listeners for real-time validation after first blur
+    ['nombre_negocio', 'nombre_contacto', 'email', 'telefono'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => {
+        const errEl = document.getElementById('err-' + id);
+        if (errEl && !errEl.classList.contains('hidden')) validateField(id);
+        updateButton();
+      });
+    });
+
+    ['giro', 'volumen'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', () => {
+        validateField(id);
+        updateButton();
+      });
+    });
+
+    // ===== BUTTON STATE =====
+    function isFormValid() {
+      const nn = document.getElementById('nombre_negocio').value.trim();
+      const nc = document.getElementById('nombre_contacto').value.trim();
+      const em = document.getElementById('email').value.trim();
+      const tel = document.getElementById('telefono').value.trim();
+      const giro = document.getElementById('giro').value;
+      const vol = document.getElementById('volumen').value;
+
+      return nn.length >= 3 &&
+        nc.length >= 3 &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em) &&
+        /^\+52\d{10}$/.test(tel) &&
+        giro !== '' &&
+        vol !== '' &&
+        acceptedTerms &&
+        captchaToken !== null;
+    }
+
+    function updateButton() {
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = !isFormValid() || isSubmitting;
+    }
+
+    // ===== TOAST =====
+    function showToast(title, msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 5000);
+    }
+
+    // ===== FAQ =====
+    function toggleFaq(btn) {
+      const answer = btn.nextElementSibling;
+      const arrow = btn.querySelector('svg');
+      answer.classList.toggle('open');
+      arrow.style.transform = answer.classList.contains('open') ? 'rotate(180deg)' : '';
+    }
+
+    // ===== SUBMIT =====
+    async function handleSubmit() {
+      // Validate all fields
+      const fields = ['nombre_negocio', 'nombre_contacto', 'email', 'telefono', 'giro', 'volumen'];
+      let allValid = true;
+      fields.forEach(id => { if (!validateField(id)) allValid = false; });
+      if (!allValid) return;
+
+      if (typeof FB === 'undefined') {
+        showToast('Error', 'El SDK de Facebook no se ha cargado. Recarga la página.');
+        return;
+      }
+
+      isSubmitting = true;
+      const btn = document.getElementById('btn-submit');
+      const btnText = document.getElementById('btn-text');
+      const btnSpinner = document.getElementById('btn-spinner');
+      btn.disabled = true;
+      btnText.textContent = 'Conectando con Meta...';
+      btnSpinner.classList.remove('hidden');
+
+      // Disable form fields
+      document.querySelectorAll('.input-field, .select-field').forEach(el => el.disabled = true);
+
+      // Listen for embedded signup data
+      const messageListener = function(event) {
+        if (event.origin !== 'https://www.facebook.com' && event.origin !== 'https://web.facebook.com') return;
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'WA_EMBEDDED_SIGNUP') {
+            embeddedSignupData.waba_id = data.data.waba_id;
+            embeddedSignupData.phone_number_id = data.data.phone_number_id;
+          }
+        } catch(e) {}
+      };
+
+      window.addEventListener('message', messageListener);
+      document.getElementById('meta-popup-msg').classList.remove('hidden');
+
+      FB.login(async function(response) {
+        document.getElementById('meta-popup-msg').classList.add('hidden');
+
+        if (response.authResponse) {
+          const code = response.authResponse.code;
+
+          // Wait for embedded signup data
+          await new Promise(r => setTimeout(r, 1000));
+
+          const payload = {
+            nombre_negocio: document.getElementById('nombre_negocio').value.trim(),
+            nombre_contacto: document.getElementById('nombre_contacto').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(),
+            giro: document.getElementById('giro').value,
+            volumen_mensajes: document.getElementById('volumen').value,
+            code: code,
+            waba_id: embeddedSignupData.waba_id,
+            phone_number_id: embeddedSignupData.phone_number_id,
+            captcha_token: captchaToken,
+            timestamp: new Date().toISOString(),
+            source: 'embedded_signup'
+          };
+
+          try {
+            const res = await fetch('https://paneln8n.multi-agent-ai.com/webhook/whatsapp-onboarding', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+              // Show success
+              document.getElementById('form-container').classList.add('hidden');
+              document.getElementById('success-container').classList.remove('hidden');
+              document.getElementById('success-negocio').textContent = payload.nombre_negocio;
+              document.getElementById('success-waba').textContent = embeddedSignupData.waba_id || 'Pendiente';
+              document.getElementById('success-phone').textContent = embeddedSignupData.phone_number_id || 'Pendiente';
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              showToast('Error', 'Hubo un error al registrar tu negocio. Por favor intenta de nuevo.');
+              resetSubmitState();
+            }
+          } catch(e) {
+            showToast('Error de conexión', 'Verifica tu internet e intenta de nuevo.');
+            resetSubmitState();
+          }
+        } else {
+          showToast('Conexión cancelada', 'Puedes intentar de nuevo cuando quieras.');
+          resetSubmitState();
+        }
+
+        window.removeEventListener('message', messageListener);
+      }, {
+        config_id: '1327507276096409',
+        response_type: 'code',
+        override_default_response_type: true,
+        scope: 'whatsapp_business_management,whatsapp_business_messaging',
+        extras: {
+          setup: {},
+          featureType: 'whatsapp_business_app_onboarding',
+          sessionInfoVersion: '3'
+        }
+      });
+    }
+
+    function resetSubmitState() {
+      isSubmitting = false;
+      const btn = document.getElementById('btn-submit');
+      const btnText = document.getElementById('btn-text');
+      const btnSpinner = document.getElementById('btn-spinner');
+      btnText.textContent = 'Conectar mi WhatsApp';
+      btnSpinner.classList.add('hidden');
+      btn.disabled = false;
+      document.querySelectorAll('.input-field, .select-field').forEach(el => el.disabled = false);
+    }
+  </script>
+
+</body>
+</html>

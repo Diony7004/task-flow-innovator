@@ -19,6 +19,8 @@ const services = [
     title: "WhatsApp Business API",
     description:
       "Como proveedor de tecnología autorizado por Meta, conectamos tu negocio a la API oficial de WhatsApp. Coexistencia con la app móvil, onboarding automatizado y mensajería a escala.",
+    link: "/onboarding/",
+    linkText: "Conectar ahora →",
   },
 ];
 
@@ -48,6 +50,9 @@ const ServicesSection = () => (
             </div>
             <h3 className="mt-4 text-xl font-semibold text-foreground">{s.title}</h3>
             <p className="mt-3 text-muted-foreground leading-relaxed text-sm">{s.description}</p>
+            {"link" in s && s.link && (
+              <a href={s.link} className="mt-4 inline-block text-primary hover:text-primary/80 font-semibold text-sm transition-colors">{s.linkText}</a>
+            )}
           </motion.div>
         ))}
       </div>
