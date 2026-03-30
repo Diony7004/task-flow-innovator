@@ -528,53 +528,50 @@
       window.addEventListener('message', messageListener);
       document.getElementById('meta-popup-msg').classList.remove('hidden');
 
-      FB.login(async function(response) {
+      FB.login(function(response) {
         document.getElementById('meta-popup-msg').classList.add('hidden');
 
         if (response.authResponse) {
           const code = response.authResponse.code;
 
-          // Wait for embedded signup data
-          await new Promise(r => setTimeout(r, 1000));
+          // Wait for embedded signup data then send to webhook
+          setTimeout(function() {
+            const payload = {
+              nombre_negocio: document.getElementById('nombre_negocio').value.trim(),
+              nombre_contacto: document.getElementById('nombre_contacto').value.trim(),
+              email: document.getElementById('email').value.trim(),
+              telefono: document.getElementById('telefono').value.trim(),
+              giro: document.getElementById('giro').value,
+              volumen_mensajes: document.getElementById('volumen').value,
+              code: code,
+              waba_id: embeddedSignupData.waba_id,
+              phone_number_id: embeddedSignupData.phone_number_id,
+              captcha_token: captchaToken,
+              timestamp: new Date().toISOString(),
+              source: 'embedded_signup'
+            };
 
-          const payload = {
-            nombre_negocio: document.getElementById('nombre_negocio').value.trim(),
-            nombre_contacto: document.getElementById('nombre_contacto').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            telefono: document.getElementById('telefono').value.trim(),
-            giro: document.getElementById('giro').value,
-            volumen_mensajes: document.getElementById('volumen').value,
-            code: code,
-            waba_id: embeddedSignupData.waba_id,
-            phone_number_id: embeddedSignupData.phone_number_id,
-            captcha_token: captchaToken,
-            timestamp: new Date().toISOString(),
-            source: 'embedded_signup'
-          };
-
-          try {
-            const res = await fetch('https://paneln8n.multi-agent-ai.com/webhook/whatsapp-onboarding', {
+            fetch('https://paneln8n.multi-agent-ai.com/webhook/whatsapp-onboarding', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-              // Show success
-              document.getElementById('form-container').classList.add('hidden');
-              document.getElementById('success-container').classList.remove('hidden');
-              document.getElementById('success-negocio').textContent = payload.nombre_negocio;
-              document.getElementById('success-waba').textContent = embeddedSignupData.waba_id || 'Pendiente';
-              document.getElementById('success-phone').textContent = embeddedSignupData.phone_number_id || 'Pendiente';
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-              showToast('Error', 'Hubo un error al registrar tu negocio. Por favor intenta de nuevo.');
+            }).then(function(res) {
+              if (res.ok) {
+                document.getElementById('form-container').classList.add('hidden');
+                document.getElementById('success-container').classList.remove('hidden');
+                document.getElementById('success-negocio').textContent = payload.nombre_negocio;
+                document.getElementById('success-waba').textContent = embeddedSignupData.waba_id || 'Pendiente';
+                document.getElementById('success-phone').textContent = embeddedSignupData.phone_number_id || 'Pendiente';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else {
+                showToast('Error', 'Hubo un error al registrar tu negocio. Por favor intenta de nuevo.');
+                resetSubmitState();
+              }
+            }).catch(function(e) {
+              showToast('Error de conexión', 'Verifica tu internet e intenta de nuevo.');
               resetSubmitState();
-            }
-          } catch(e) {
-            showToast('Error de conexión', 'Verifica tu internet e intenta de nuevo.');
-            resetSubmitState();
-          }
+            });
+          }, 1000);
         } else {
           showToast('Conexión cancelada', 'Puedes intentar de nuevo cuando quieras.');
           resetSubmitState();
